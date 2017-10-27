@@ -35,10 +35,17 @@ public:
 #endif
 
 protected:
+	CFont m_font;
+	LOGFONT m_logfont;
+	COLORREF m_textColor;
 
 // 生成的消息映射函数
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnFormatSelectFont();
+	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext = NULL);
+	afx_msg HBRUSH CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/);
 };
 
 #ifndef _DEBUG  // TxtViewerView.cpp 中的调试版本

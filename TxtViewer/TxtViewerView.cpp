@@ -26,6 +26,8 @@ BEGIN_MESSAGE_MAP(CTxtViewerView, CEditView)
 	ON_COMMAND(ID_FILE_PRINT, &CEditView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CEditView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CEditView::OnFilePrintPreview)
+	ON_COMMAND(ID_FORMAT_SELECT_FONT, &CTxtViewerView::OnFormatSelectFont)
+	ON_WM_CTLCOLOR_REFLECT()
 END_MESSAGE_MAP()
 
 // CTxtViewerView 构造/析构
@@ -33,7 +35,6 @@ END_MESSAGE_MAP()
 CTxtViewerView::CTxtViewerView()
 {
 	// TODO: 在此处添加构造代码
-
 }
 
 CTxtViewerView::~CTxtViewerView()
@@ -46,7 +47,7 @@ BOOL CTxtViewerView::PreCreateWindow(CREATESTRUCT& cs)
 	//  CREATESTRUCT cs 来修改窗口类或样式
 
 	BOOL bPreCreated = CEditView::PreCreateWindow(cs);
-	cs.style &= ~(ES_AUTOHSCROLL|WS_HSCROLL);	// 启用换行
+	cs.style &= ~(ES_AUTOHSCROLL | WS_HSCROLL);	// 启用换行
 
 	return bPreCreated;
 }
@@ -72,7 +73,6 @@ void CTxtViewerView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo)
 	CEditView::OnEndPrinting(pDC, pInfo);
 }
 
-
 // CTxtViewerView 诊断
 
 #ifdef _DEBUG
@@ -95,3 +95,48 @@ CTxtViewerDoc* CTxtViewerView::GetDocument() const // 非调试版本是内联的
 
 
 // CTxtViewerView 消息处理程序
+
+
+void CTxtViewerView::OnFormatSelectFont()
+{
+	// TODO: 在此添加命令处理程序代码
+
+	CFontDialog m_fontDlg(&m_logfont, CF_EFFECTS);
+	m_fontDlg.m_cf.rgbColors = m_textColor;
+	if (m_fontDlg.DoModal() == IDOK)
+	{
+		m_fontDlg.GetCurrentFont(&m_logfont);
+		m_font.DeleteObject();
+		m_font.CreateFontIndirect(&m_logfont);
+		m_textColor = m_fontDlg.GetColor();
+		this->SetFont(&m_font);
+	}
+}
+
+BOOL CTxtViewerView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	if (!CEditView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext))
+	{
+		return FALSE;
+	}
+
+	//初始化字体
+	m_font.CreatePointFont(90, "宋体");
+	m_font.GetLogFont(&m_logfont);
+	m_textColor = RGB(0, 0, 0);
+	this->SetFont(&m_font);
+	return TRUE;
+}
+
+
+HBRUSH CTxtViewerView::CtlColor(CDC* pDC, UINT nCtlColor)
+{
+	// TODO:  在此更改 DC 的任何特性
+	pDC->SetTextColor(m_textColor);
+	pDC->SetBkMode(TRANSPARENT);
+	HBRUSH newHbr = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+	// TODO:  如果不应调用父级的处理程序，则返回非 null 画笔
+	return newHbr;
+}

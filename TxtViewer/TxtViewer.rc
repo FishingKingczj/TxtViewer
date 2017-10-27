@@ -111,8 +111,7 @@ BEGIN
     END
     POPUP "格式(&O)"
     BEGIN
-        MENUITEM "自动换行(&W)",                    ID_32771
-        MENUITEM "字体(&F)...",                   ID_32772
+        MENUITEM "字体(&F)...",                   ID_FORMAT_SELECT_FONT
     END
     POPUP "帮助(&H)"
     BEGIN
