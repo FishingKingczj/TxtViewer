@@ -112,6 +112,11 @@ BEGIN
     POPUP "格式(&O)"
     BEGIN
         MENUITEM "字体(&F)...",                   ID_FORMAT_SELECT_FONT
+        POPUP "大小写转换(&T)"
+        BEGIN
+            MENUITEM "全部转为大写(&U)",                  ID_TO_UPPERCASE
+            MENUITEM "全部转为小写(&L)",                  ID_TO_LOWERCASE
+        END
     END
     POPUP "帮助(&H)"
     BEGIN

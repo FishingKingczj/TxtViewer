@@ -44,8 +44,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnFormatSelectFont();
+	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
 	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext = NULL);
-	afx_msg HBRUSH CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/);
+	afx_msg void OnToUppercase();
+	afx_msg void OnToLowercase();
 };
 
 #ifndef _DEBUG  // TxtViewerView.cpp 中的调试版本

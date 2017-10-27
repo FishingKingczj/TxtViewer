@@ -27,6 +27,8 @@ BEGIN_MESSAGE_MAP(CTxtViewerView, CEditView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CEditView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CEditView::OnFilePrintPreview)
 	ON_COMMAND(ID_FORMAT_SELECT_FONT, &CTxtViewerView::OnFormatSelectFont)
+	ON_COMMAND(ID_TO_UPPERCASE, &CTxtViewerView::OnToUppercase)
+	ON_COMMAND(ID_TO_LOWERCASE, &CTxtViewerView::OnToLowercase)
 	ON_WM_CTLCOLOR_REFLECT()
 END_MESSAGE_MAP()
 
@@ -109,9 +111,11 @@ void CTxtViewerView::OnFormatSelectFont()
 		m_font.DeleteObject();
 		m_font.CreateFontIndirect(&m_logfont);
 		m_textColor = m_fontDlg.GetColor();
-		this->SetFont(&m_font);
+		SetFont(&m_font);
 	}
 }
+
+//创建之后初始化字体
 
 BOOL CTxtViewerView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext)
 {
@@ -126,17 +130,39 @@ BOOL CTxtViewerView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD
 	m_font.CreatePointFont(90, "宋体");
 	m_font.GetLogFont(&m_logfont);
 	m_textColor = RGB(0, 0, 0);
-	this->SetFont(&m_font);
+	SetFont(&m_font);
 	return TRUE;
 }
 
+//重写消息反射
 
 HBRUSH CTxtViewerView::CtlColor(CDC* pDC, UINT nCtlColor)
 {
 	// TODO:  在此更改 DC 的任何特性
 	pDC->SetTextColor(m_textColor);
-	pDC->SetBkMode(TRANSPARENT);
-	HBRUSH newHbr = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+	HBRUSH newHbr = CreateSolidBrush(RGB(255, 255, 255));
 	// TODO:  如果不应调用父级的处理程序，则返回非 null 画笔
 	return newHbr;
+}
+
+
+void CTxtViewerView::OnToUppercase()
+{
+	// TODO: 在此添加命令处理程序代码
+	CString temp;
+	CEdit& m_cedit = GetEditCtrl();
+	m_cedit.GetWindowText(temp);
+	temp = temp.MakeUpper();
+	m_cedit.SetWindowTextA(temp);
+}
+
+
+void CTxtViewerView::OnToLowercase()
+{
+	// TODO: 在此添加命令处理程序代码
+	CString temp;
+	CEdit& m_cedit = GetEditCtrl();
+	m_cedit.GetWindowText(temp);
+	temp = temp.MakeLower();
+	m_cedit.SetWindowTextA(temp);
 }
